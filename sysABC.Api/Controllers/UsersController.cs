@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using sysABC.Infrastructure.Commands.Users;
 using sysABC.Infrastructure.DTO;
 using sysABC.Infrastructure.Services;
 
@@ -20,23 +19,26 @@ namespace sysABC.Api.Controllers
 
         // GET api/users
         [HttpGet]
-        public IEnumerable<UserDto> Get()
+        public async Task<IEnumerable<UserDto>> GetAsync()
         {
-            return _userService.GetAll();
+            return await _userService.GetAllAsync();
         }
 
         // GET api/users/email
         [HttpGet("{email}")]
-        public UserDto Get(string email)
+        public async Task<UserDto> GetAsync(string email)
         {
-            return _userService.Get(email.ToLowerInvariant());
+            return await _userService.GetAsync(email.ToLowerInvariant());
         }
 
-        //// POST api/users
-        //[HttpPost]
-        //public void Post([FromBody]string value)
-        //{
-        //}
+        // POST api/users
+        // curl http://localhost:5000/api/users/ -X POST -H "Content-Type: application/json" 
+        // -d '{"email": "tk@gmail.com", "password": "pass", "nickname": "bl4des", "firstName": "Tomasz", "lastName": "Kisiel"}'
+        [HttpPost]
+        public async Task Post([FromBody]CreateUser request)
+        {
+            await _userService.RegisterAsync(request.Email, request.Password, request.NickName, request.FirstName, request.LastName);
+        }
 
         //// PUT api/users/5
         //[HttpPut("{id}")]

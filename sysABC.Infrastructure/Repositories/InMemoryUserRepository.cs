@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using sysABC.Core.Models;
 using sysABC.Core.Repositories;
 
@@ -15,35 +16,32 @@ namespace sysABC.Infrastructure.Repositories
             new User("Jack.Daniels@systemabc.com", "NotGoodPassword", "dontuseplaintextpass", "Jack", "Daniels", "jack18"),
         };
 
-        public void Add(User user)
+        public async Task<User> GetAsync(Guid id)
+            => await Task.FromResult(_users.SingleOrDefault(x => x.Id == id));
+
+        public async Task<User> GetAsync(string email)
+            => await Task.FromResult(_users.SingleOrDefault(x => x.Email == email.ToLowerInvariant()));
+
+        public async Task<IEnumerable<User>> GetAllAsync()
+            => await Task.FromResult(_users);
+
+        public async Task AddAsync(User user)
         {
             _users.Add(user);
+            await Task.CompletedTask;
         }
 
-        public User Get(Guid id)
+        public async Task RemoveAsync(Guid id)
         {
-            return _users.Single(x => x.Id == id);
-        }
-
-        public User Get(string email)
-        {
-            return _users.Single(x => x.Email == email.ToLowerInvariant());
-        }
-
-        public IEnumerable<User> GetAll()
-        {
-            return _users;
-        }
-
-        public void Remove(Guid id)
-        {
-            User user = Get(id);
+            User user = await GetAsync(id);
             //#todo: null checking
             _users.Remove(user);
+            await Task.CompletedTask;
         }
 
-        public void Update(Guid id)
+        public async Task UpdateAsync(Guid id)
         {
+            await Task.CompletedTask;
         }
     }
 }

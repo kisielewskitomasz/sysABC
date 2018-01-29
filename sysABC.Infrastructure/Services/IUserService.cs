@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using sysABC.Infrastructure.DTO;
 
 namespace sysABC.Infrastructure.Services
 {
     public interface IUserService
     {
-        void Register(string email, string password, string nickName, string firstName, string lastName);
+        Task RegisterAsync(string email, string password, string nickName, string firstName, string lastName);
 
-        UserDto Get(string email);
+        Task<UserDto> GetAsync(string email);
 
-        IEnumerable<UserDto> GetAll();
+        Task<IEnumerable<UserDto>> GetAllAsync();
     }
 }

@@ -8,6 +8,8 @@
     <Folder Include="Repositories\" />
     <Folder Include="Services\" />
     <Folder Include="DTO\" />
+    <Folder Include="Commands\" />
+    <Folder Include="Commands\Users\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\sysABC.Core\sysABC.Core.csproj" />
