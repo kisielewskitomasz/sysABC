@@ -28,13 +28,6 @@ namespace sysABC.Tests.Controllers
         }
 
         [Fact]
-        public async Task get_all_user()
-        {
-            var users = await GetAllUsersAsync();
-            users.ShouldBeEquivalentTo(users);
-        }
-
-        [Fact]
         public async Task given_valid_email_user_should_exist()
         {
             var email = "admin@systemabc.com";
@@ -78,13 +71,13 @@ namespace sysABC.Tests.Controllers
             return JsonConvert.DeserializeObject<UserDto>(responseString);
         }
 
-        private async Task<IEnumerable<UserDto>> GetAllUsersAsync()
-        {
-            var response = await _client.GetAsync($"api/users/");
-            var responseString = await response.Content.ReadAsStringAsync();
+        //private async Task<IEnumerable<UserDto>> GetAllUsersAsync()
+        //{
+        //    var response = await _client.GetAsync($"api/users/");
+        //    var responseString = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<IEnumerable<UserDto>>(responseString);
-        }
+        //    return JsonConvert.DeserializeObject<IEnumerable<UserDto>>(responseString);
+        //}
 
         private static StringContent GetPayload(object data)
         {
