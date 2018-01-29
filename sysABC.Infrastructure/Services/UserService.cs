@@ -30,8 +30,9 @@ namespace sysABC.Infrastructure.Services
         public async Task<UserDto> GetAsync(string email)
         {
             User user = await _userRepository.GetAsync(email);
-            if (user == null)
-                throw new Exception($"User with '{email}' alredy exitst!");
+            if (user == null) 
+                return null;
+            //   throw new Exception($"User with '{email}' not exitst!");
 
             return new UserDto(user.Id, user.Email, user.NickName, user.FirstName, user.LastName, user.Privilages);
         }
@@ -43,6 +44,9 @@ namespace sysABC.Infrastructure.Services
             foreach (var user in users)
                 usersDto.Add(new UserDto(user.Id, user.Email, user.NickName, user.FirstName, user.LastName, user.Privilages));
 
+            if (usersDto.Count == 0)
+                return null;
+            
             return usersDto;
         }
     }

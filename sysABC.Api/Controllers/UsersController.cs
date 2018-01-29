@@ -19,37 +19,39 @@ namespace sysABC.Api.Controllers
 
         // GET api/users
         [HttpGet]
-        public async Task<IEnumerable<UserDto>> GetAsync()
+        public async Task<IActionResult> GetAsync()
         {
-            return await _userService.GetAllAsync();
+            var users = await _userService.GetAllAsync();
+            if (users == null)
+            {
+                return NotFound();
+            }
+
+            return (Json(users));
         }
 
         // GET api/users/email
         [HttpGet("{email}")]
-        public async Task<UserDto> GetAsync(string email)
+        public async Task<IActionResult> GetAsync(string email)
         {
-            return await _userService.GetAsync(email.ToLowerInvariant());
+            var user = await _userService.GetAsync(email.ToLowerInvariant());
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return (Json(user));
         }
 
         // POST api/users
-        // curl http://localhost:5000/api/users/ -X POST -H "Content-Type: application/json" 
-        // -d '{"email": "tk@gmail.com", "password": "pass", "nickname": "bl4des", "firstName": "Tomasz", "lastName": "Kisiel"}'
+        // curl http://localhost:5000/api/users/ -X POST -H "Content-Type: application/json" -d '{"email": "tk@gmail.com", "password": "pass", "nickname": "bl4des", "firstName": "Tomasz", "lastName": "Kisiel"}'
+
         [HttpPost]
-        public async Task Post([FromBody]CreateUser request)
+        public async Task<IActionResult> Post([FromBody]CreateUser request)
         {
             await _userService.RegisterAsync(request.Email, request.Password, request.NickName, request.FirstName, request.LastName);
+
+            return Created($"api/users/{request.Email}", new object());
         }
-
-        //// PUT api/users/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody]string value)
-        //{
-        //}
-
-        //// DELETE api/users/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
     }
 }
