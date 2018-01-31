@@ -14,4 +14,12 @@
   <ItemGroup>
     <ProjectReference Include="..\sysABC.Core\sysABC.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.2.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="DTO\JwtDto.cs" />
+    <Compile Remove="Services\IJwtHandler.cs" />
+    <Compile Remove="Services\JwtHandler.cs" />
+  </ItemGroup>
 </Project>

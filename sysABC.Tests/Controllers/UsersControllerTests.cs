@@ -55,7 +55,7 @@ namespace sysABC.Tests.Controllers
                 LastName = "Norris"
             };
             var payload = GetPayload(request);
-            var response = await _client.PostAsync("api/users/", payload);
+            var response = await _client.PostAsync("api/users/register", payload);
             response.StatusCode.ShouldBeEquivalentTo(HttpStatusCode.Created);
             response.Headers.Location.ToString().ShouldBeEquivalentTo($"api/users/{request.Email}");
 
@@ -63,7 +63,7 @@ namespace sysABC.Tests.Controllers
             user.Email.ShouldBeEquivalentTo(request.Email);
         }
 
-        private async Task<UserDto> GetUserAsync(string email)
+        async Task<UserDto> GetUserAsync(string email)
         {
             var response = await _client.GetAsync($"api/users/{email}");
             var responseString = await response.Content.ReadAsStringAsync();

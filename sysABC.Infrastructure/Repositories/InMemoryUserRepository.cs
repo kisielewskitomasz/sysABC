@@ -9,12 +9,7 @@ namespace sysABC.Infrastructure.Repositories
 {
     public class InMemoryUserRepository : IUserRepository
     {
-        static ISet<User> _users = new HashSet<User>()
-        {
-            new User("admin@systemabc.com", "Admin1234", "dontuseplaintextpass", "admin", "admin", "admin", "Admin"),
-            new User("John.Doe@systemabc.com", "JonDoeSecretPass", "dontuseplaintextpass", "John", "Doe", "doedoe"),
-            new User("Jack.Daniels@systemabc.com", "NotGoodPassword", "dontuseplaintextpass", "Jack", "Daniels", "jack18"),
-        };
+        static ISet<User> _users = new HashSet<User>();
 
         public async Task<User> GetAsync(Guid id)
             => await Task.FromResult(_users.SingleOrDefault(x => x.Id == id));
@@ -22,7 +17,7 @@ namespace sysABC.Infrastructure.Repositories
         public async Task<User> GetAsync(string email)
             => await Task.FromResult(_users.SingleOrDefault(x => x.Email == email.ToLowerInvariant()));
 
-        public async Task<IEnumerable<User>> GetAllAsync()
+        public async Task<IEnumerable<User>> BrowseAsync()
             => await Task.FromResult(_users);
 
         public async Task AddAsync(User user)

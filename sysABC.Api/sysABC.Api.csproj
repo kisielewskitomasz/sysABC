@@ -10,6 +10,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.0.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,5 +22,8 @@
   <ItemGroup>
     <ProjectReference Include="..\sysABC.Infrastructure\sysABC.Infrastructure.csproj" />
     <ProjectReference Include="..\sysABC.Core\sysABC.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Controllers\AccountController.cs" />
   </ItemGroup>
 </Project>

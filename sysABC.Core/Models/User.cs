@@ -13,7 +13,7 @@ namespace sysABC.Core.Models
         public string NickName { get; protected set; }
         public string FirstName { get; protected set; }
         public string LastName { get; protected set; }
-        public string Privilages { get; protected set; }
+        public string Role { get; protected set; }
         public DateTime CreatedAt { get; protected set; }
         public DateTime UpdatedAt { get; protected set; }
 
@@ -23,7 +23,7 @@ namespace sysABC.Core.Models
         {
         }
 
-        public User(string email, string password, string salt, string nickName, string firstName, string lastName, string privilages = "User")
+        public User(string email, string password, string salt, string nickName, string firstName, string lastName, string role = "user")
         {
             //#todo: validation
             Id = Guid.NewGuid();
@@ -33,7 +33,7 @@ namespace sysABC.Core.Models
             NickName = nickName;
             FirstName = firstName;
             LastName = lastName;
-            Privilages = privilages;
+            Role = role;
             CreatedAt = DateTime.UtcNow;
         }
 
@@ -90,6 +90,15 @@ namespace sysABC.Core.Models
                 return;
 
             Password = password;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void SetRole(string role)
+        {
+            if (Role == role)
+                return;
+
+            Role = role;
             UpdatedAt = DateTime.UtcNow;
         }
     }

@@ -14,8 +14,9 @@ namespace sysABC.Tests.Services
         public async Task register_async_should_invoke_add_async_on_repository()
         {
             var userRepositoryMock = new Mock<IUserRepository>();
+            var encrypteryMock = new Mock<IEncrypter>();
 
-            var userService = new UserService(userRepositoryMock.Object);
+            var userService = new UserService(userRepositoryMock.Object, encrypteryMock.Object);
             await userService.RegisterAsync("adress@email.com", "plaintextpass", "superruserr", "Brad", "Pitt");
 
             userRepositoryMock.Verify(x => x.AddAsync(It.IsAny<User>()), Times.Once);

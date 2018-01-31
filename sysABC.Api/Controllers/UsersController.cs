@@ -1,27 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Text;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using sysABC.Infrastructure.Commands.Users;
-using sysABC.Infrastructure.DTO;
 using sysABC.Infrastructure.Services;
+using sysABC.Infrastructure.Settings;
 
 namespace sysABC.Api.Controllers
 {
-    [Route("api/[controller]")]
-    public class UsersController : Controller
+    public class UsersController : ApiControllerBase
     {
-        readonly IUserService _userService;
-
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, JwtSettings jwtSettings) : base(userService, jwtSettings)
         {
-            _userService = userService;
         }
 
         // GET api/users
+        //[Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        public async Task<IActionResult> BrowseUsersAsync()
         {
-            var users = await _userService.GetAllAsync();
+            var users = await UserService.BrowseAsync();
             if (users == null)
             {
                 return NotFound();
@@ -31,10 +33,11 @@ namespace sysABC.Api.Controllers
         }
 
         // GET api/users/email
+        [Authorize]
         [HttpGet("{email}")]
-        public async Task<IActionResult> GetAsync(string email)
+        public async Task<IActionResult> GetUserAsync(string email)
         {
-            var user = await _userService.GetAsync(email.ToLowerInvariant());
+            var user = await UserService.GetAsync(email.ToLowerInvariant());
             if (user == null)
             {
                 return NotFound();
@@ -43,15 +46,69 @@ namespace sysABC.Api.Controllers
             return (Json(user));
         }
 
-        // POST api/users
-        // curl http://localhost:5000/api/users/ -X POST -H "Content-Type: application/json" -d '{"email": "tk@gmail.com", "password": "pass", "nickname": "bl4des", "firstName": "Tomasz", "lastName": "Kisiel"}'
+        //[Route("update/password")]
+        //[Authorize]
+        //[HttpPut]
+        //public async Task<IActionResult> PutUpdateUserAsync([FromBody]UpdateUserPassword request)
+        //{
+        //    await UserService.UpdateAsync(request.Email, request.Password);
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody]CreateUser request)
+        //    return Ok();
+        //}
+
+        [Authorize]// admin
+        [HttpDelete("{email}")]
+        public async Task<IActionResult> DeleteUserAsync(string email)
         {
-            await _userService.RegisterAsync(request.Email, request.Password, request.NickName, request.FirstName, request.LastName);
+            var user = await UserService.GetAsync(email.ToLowerInvariant());
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            await UserService.DeleteAsync(email.ToLowerInvariant());
+
+            return Ok();
+        }
+
+        // POST api/users
+        // curl http://localhost:5000/api/users/add -X POST -H "Content-Type: application/json" -d '{"email": "tk@gmail.com", "password": "pass", "nickname": "bl4des", "firstName": "Tomasz", "lastName": "Kisiel"}'
+
+        [Route("register")]
+        [HttpPost]
+        public async Task<IActionResult> PostRegisterUserAsync([FromBody]CreateUser request)
+        {
+            await UserService.RegisterAsync(request.Email, request.Password, request.NickName, request.FirstName, request.LastName);
 
             return Created($"api/users/{request.Email}", new object());
+        }
+
+        [Route("token")]
+        [HttpPost]
+        public async Task<IActionResult> PostLoginUserAsync([FromBody]LoginUser request)
+        {
+            var loginSuccessful = await UserService.LoginAsync(request.Email, request.Password);
+            if (loginSuccessful)
+                return new ObjectResult(GenerateToken(request.Email));
+            return BadRequest();
+        }
+
+        string GenerateToken(string username)
+        {
+            var claims = new Claim[]
+            {
+                new Claim(ClaimTypes.Name, username),
+                new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
+                new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now).AddMinutes(60).ToUnixTimeSeconds().ToString()),
+            };
+
+            var token = new JwtSecurityToken(
+                new JwtHeader(new SigningCredentials(
+                                  new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdefghijklmnoprstuwyz")),
+                                             SecurityAlgorithms.HmacSha256)),
+                new JwtPayload(claims));
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
