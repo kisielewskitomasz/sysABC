@@ -21,6 +21,5 @@
     <Compile Remove="DTO\JwtDto.cs" />
     <Compile Remove="Services\IJwtHandler.cs" />
     <Compile Remove="Services\JwtHandler.cs" />
-    <Compile Remove="Settings\JwtSettings.cs" />
   </ItemGroup>
 </Project>

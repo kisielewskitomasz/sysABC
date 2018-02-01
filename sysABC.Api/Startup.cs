@@ -18,18 +18,12 @@ namespace sysABC.Api
 {
     public class Startup
     {
-<<<<<<< HEAD
         public IConfiguration Configuration { get; set; }
 
-        public Startup(IHostingEnvironment env, IConfiguration configuration)
-=======
         public Startup(IConfiguration configuration)
->>>>>>> parent of 1e18bdc... JwtSettings
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -38,14 +32,10 @@ namespace sysABC.Api
             services.AddScoped<IUserService, UserService>();
             services.AddSingleton<IEncrypter, Encrypter>();
             services.AddMvc();
-<<<<<<< HEAD
             //JwtSettings jwtSettings = Configuration.GetSection("Jwt").Get<JwtSettings>();
             //services.AddSingleton(jwtSettings);
             services.AddAuthorization(x => x.AddPolicy("admin", p => p.RequireRole("admin")));
-=======
-            JwtSettings jwtSettings = Configuration.GetSection("Jwt").Get<JwtSettings>();
-            services.AddSingleton(jwtSettings);
->>>>>>> parent of 1e18bdc... JwtSettings
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = "Jwt";
@@ -55,15 +45,11 @@ namespace sysABC.Api
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateAudience = false,
-                    ValidateIssuer = true,
-                    ValidIssuer = "http://localhost:5000",
+                    ValidateIssuer = false,
+                    //ValidIssuer = "http://localhost:5000",
 
                     ValidateIssuerSigningKey = true,
-<<<<<<< HEAD
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz")),
-=======
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdefghijklmnoprstuwyz")),
->>>>>>> parent of 1e18bdc... JwtSettings
 
                     ValidateLifetime = true, //validate the expiration and not before values in the token
 
