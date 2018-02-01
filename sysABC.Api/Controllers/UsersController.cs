@@ -33,7 +33,6 @@ namespace sysABC.Api.Controllers
         }
 
         // GET api/users/email
-        [Authorize]
         [HttpGet("{email}")]
         public async Task<IActionResult> GetUserAsync(string email)
         {
@@ -56,7 +55,8 @@ namespace sysABC.Api.Controllers
         //    return Ok();
         //}
 
-        [Authorize]// admin
+        //[Authorize]// admin
+        [Authorize(Roles = "admin")]
         [HttpDelete("{email}")]
         public async Task<IActionResult> DeleteUserAsync(string email)
         {
@@ -93,18 +93,19 @@ namespace sysABC.Api.Controllers
             return BadRequest();
         }
 
-        string GenerateToken(string username)
+        string GenerateToken(string mail)
         {
             var claims = new Claim[]
             {
-                new Claim(ClaimTypes.Name, username),
+                new Claim(ClaimTypes.Email, mail),
+                //new Claim(ClaimTypes.Role, role),
                 new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
-                new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now).AddMinutes(60).ToUnixTimeSeconds().ToString()),
+                new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddMinutes(JwtSettings.ExpiryMinutes)).ToUnixTimeSeconds().ToString()),
             };
 
             var token = new JwtSecurityToken(
                 new JwtHeader(new SigningCredentials(
-                                  new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdefghijklmnoprstuwyz")),
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtSettings.Key)),
                                              SecurityAlgorithms.HmacSha256)),
                 new JwtPayload(claims));
 

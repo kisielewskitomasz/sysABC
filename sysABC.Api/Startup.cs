@@ -19,12 +19,18 @@ namespace sysABC.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        public IConfiguration Configuration { get; set; }
 
-        public IConfiguration Configuration { get; }
+        public Startup(IHostingEnvironment env)
+        {
+            //Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+            Configuration = builder.Build();
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -35,6 +41,7 @@ namespace sysABC.Api
             services.AddMvc();
             JwtSettings jwtSettings = Configuration.GetSection("Jwt").Get<JwtSettings>();
             services.AddSingleton(jwtSettings);
+            services.AddAuthorization(x => x.AddPolicy("admin", p => p.RequireRole("admin")));
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = "Jwt";
@@ -44,11 +51,11 @@ namespace sysABC.Api
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateAudience = false,
-                    ValidateIssuer = true,
-                    ValidIssuer = "http://localhost:5000",
+                    ValidateIssuer = false,
+                    //ValidIssuer = jwtSettings.Issuer,
 
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdefghijklmnoprstuwyz")),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
 
                     ValidateLifetime = true, //validate the expiration and not before values in the token
 
