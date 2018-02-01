@@ -13,7 +13,6 @@ using Microsoft.Extensions.Options;
 using sysABC.Core.Repositories;
 using sysABC.Infrastructure.Repositories;
 using sysABC.Infrastructure.Services;
-using sysABC.Infrastructure.Settings;
 
 namespace sysABC.Api
 {
@@ -24,12 +23,6 @@ namespace sysABC.Api
         public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
             Configuration = configuration;
-            //var builder = new ConfigurationBuilder()
-            //    .SetBasePath(env.ContentRootPath)
-            //    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-            //    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-            //    .AddEnvironmentVariables();
-            //Configuration = builder.Build();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -71,7 +64,6 @@ namespace sysABC.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.ApplicationServices.GetService<JwtSettings>();
             app.UseAuthentication();
 
             app.UseMvc();

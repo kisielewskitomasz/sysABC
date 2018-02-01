@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using sysABC.Infrastructure.Services;
-using sysABC.Infrastructure.Settings;
 
 namespace sysABC.Api.Controllers
 {
@@ -9,12 +8,10 @@ namespace sysABC.Api.Controllers
     public abstract class ApiControllerBase : Controller
     {
         protected readonly IUserService UserService;
-        protected readonly JwtSettings JwtSettings;
 
-        public ApiControllerBase(IUserService userService, JwtSettings jwtSettings)
+        public ApiControllerBase(IUserService userService)
         {
             UserService = userService;
-            JwtSettings = jwtSettings;
         }
     }
 }

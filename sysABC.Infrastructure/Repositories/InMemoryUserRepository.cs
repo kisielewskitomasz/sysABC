@@ -33,10 +33,5 @@ namespace sysABC.Infrastructure.Repositories
             _users.Remove(user);
             await Task.CompletedTask;
         }
-
-        public async Task UpdateAsync(Guid id)
-        {
-            await Task.CompletedTask;
-        }
     }
 }

@@ -8,13 +8,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using sysABC.Infrastructure.Commands.Users;
 using sysABC.Infrastructure.Services;
-using sysABC.Infrastructure.Settings;
 
 namespace sysABC.Api.Controllers
 {
     public class UsersController : ApiControllerBase
     {
-        public UsersController(IUserService userService, JwtSettings jwtSettings) : base(userService, jwtSettings)
+        public UsersController(IUserService userService) : base(userService)
         {
         }
 
@@ -45,17 +44,6 @@ namespace sysABC.Api.Controllers
             return (Json(user));
         }
 
-        //[Route("update/password")]
-        //[Authorize]
-        //[HttpPut]
-        //public async Task<IActionResult> PutUpdateUserAsync([FromBody]UpdateUserPassword request)
-        //{
-        //    await UserService.UpdateAsync(request.Email, request.Password);
-
-        //    return Ok();
-        //}
-
-        //[Authorize]// admin
         [Authorize(Roles = "admin")]
         [HttpDelete("{email}")]
         public async Task<IActionResult> DeleteUserAsync(string email)
@@ -83,6 +71,16 @@ namespace sysABC.Api.Controllers
             return Created($"api/users/{request.Email}", new object());
         }
 
+        [Route("token/admin")]
+        [HttpPost]
+        public async Task<IActionResult> PostLoginUserAsAdminAsync([FromBody]LoginUser request)
+        {
+            var loginSuccessful = await UserService.LoginAsync(request.Email, request.Password);
+            if (loginSuccessful)
+                return new ObjectResult(GenerateToken(request.Email, "admin"));
+            return BadRequest();
+        }
+
         [Route("token")]
         [HttpPost]
         public async Task<IActionResult> PostLoginUserAsync([FromBody]LoginUser request)
@@ -93,12 +91,12 @@ namespace sysABC.Api.Controllers
             return BadRequest();
         }
 
-        string GenerateToken(string mail)
+        string GenerateToken(string mail, string role="user")
         {
             var claims = new Claim[]
             {
                 new Claim(ClaimTypes.Email, mail),
-                //new Claim(ClaimTypes.Role, role),
+                new Claim(ClaimTypes.Role, role),
                 new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
                 new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddMinutes(60)).ToUnixTimeSeconds().ToString()),
             };

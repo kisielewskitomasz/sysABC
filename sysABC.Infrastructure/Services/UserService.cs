@@ -67,17 +67,6 @@ namespace sysABC.Infrastructure.Services
             return usersDto;
         }
 
-        //public async Task<UserDto> UpdatePasswordAsync(string email, string password)
-        //{
-        //    var user = await _userRepository.GetAsync(email);
-        //    if (user == null)
-        //        return null;
-        //        //throw new Exception($"User with '{email}' not exitst!");
-
-        //    await _userRepository.UpdateAsync(user.Id);
-        //    return new UserDto(user.Id, user.Email, user.NickName, user.FirstName, user.LastName, user.Role);
-        //}
-
         public async Task<bool> DeleteAsync(string email)
         {
             var user = await _userRepository.GetAsync(email);

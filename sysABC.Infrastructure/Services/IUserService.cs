@@ -11,7 +11,6 @@ namespace sysABC.Infrastructure.Services
         Task<bool> LoginAsync(string email, string password);
         Task<UserDto> GetAsync(string email);
         Task<IEnumerable<UserDto>> BrowseAsync();
-        //Task<UserDto> UpdatePasswordAsync(string email, string password);
         Task<bool> DeleteAsync(string email);
     }
 }

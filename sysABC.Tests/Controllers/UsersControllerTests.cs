@@ -80,7 +80,7 @@ namespace sysABC.Tests.Controllers
         //    return JsonConvert.DeserializeObject<IEnumerable<UserDto>>(responseString);
         //}
 
-        private static StringContent GetPayload(object data)
+        static StringContent GetPayload(object data)
         {
             var json = JsonConvert.SerializeObject(data);
 
