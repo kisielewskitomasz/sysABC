@@ -17,8 +17,6 @@ namespace sysABC.Api.Controllers
         {
         }
 
-        // GET api/users
-        //[Authorize]
         [HttpGet]
         public async Task<IActionResult> BrowseUsersAsync()
         {
@@ -31,8 +29,6 @@ namespace sysABC.Api.Controllers
             return (Json(users));
         }
 
-        // GET api/users/email
-        [Authorize]
         [HttpGet("{email}")]
         public async Task<IActionResult> GetUserAsync(string email)
         {
@@ -59,9 +55,6 @@ namespace sysABC.Api.Controllers
 
             return Ok();
         }
-
-        // POST api/users
-        // curl http://localhost:5000/api/users/add -X POST -H "Content-Type: application/json" -d '{"email": "tk@gmail.com", "password": "pass", "nickname": "bl4des", "firstName": "Tomasz", "lastName": "Kisiel"}'
 
         [Route("register")]
         [HttpPost]
@@ -101,11 +94,11 @@ namespace sysABC.Api.Controllers
                 new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
                 new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddMinutes(60)).ToUnixTimeSeconds().ToString()),
             };
-                var token = new JwtSecurityToken(
-                new JwtHeader(new SigningCredentials(
-                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz")),
-                                             SecurityAlgorithms.HmacSha256)),
-                new JwtPayload(claims));
+            var token = new JwtSecurityToken(
+            new JwtHeader(new SigningCredentials(
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz")),
+                                         SecurityAlgorithms.HmacSha256)),
+            new JwtPayload(claims));
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

@@ -20,7 +20,7 @@ namespace sysABC.Api
     {
         public IConfiguration Configuration { get; set; }
 
-        public Startup(IConfiguration configuration)
+        public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
             Configuration = configuration;
         }
@@ -35,7 +35,6 @@ namespace sysABC.Api
             //JwtSettings jwtSettings = Configuration.GetSection("Jwt").Get<JwtSettings>();
             //services.AddSingleton(jwtSettings);
             services.AddAuthorization(x => x.AddPolicy("admin", p => p.RequireRole("admin")));
-
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = "Jwt";
@@ -46,7 +45,7 @@ namespace sysABC.Api
                 {
                     ValidateAudience = false,
                     ValidateIssuer = false,
-                    //ValidIssuer = "http://localhost:5000",
+                    //ValidIssuer = jwtSettings.Issuer,
 
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz")),
