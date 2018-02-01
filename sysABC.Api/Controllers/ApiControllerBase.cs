@@ -8,10 +8,12 @@ namespace sysABC.Api.Controllers
     public abstract class ApiControllerBase : Controller
     {
         protected readonly IUserService UserService;
+        //protected readonly JwtSettings JwtSettings;
 
         public ApiControllerBase(IUserService userService)
         {
             UserService = userService;
+            //JwtSettings = jwtSettings;
         }
     }
 }

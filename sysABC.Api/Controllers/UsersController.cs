@@ -14,6 +14,7 @@ namespace sysABC.Api.Controllers
     public class UsersController : ApiControllerBase
     {
         public UsersController(IUserService userService) : base(userService)
+        //public UsersController(IUserService userService, JwtSettings jwtSettings) : base(userService, jwtSettings)
         {
         }
 
@@ -91,6 +92,8 @@ namespace sysABC.Api.Controllers
             {
                 new Claim(ClaimTypes.Email, mail),
                 new Claim(ClaimTypes.Role, role),
+                //new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
+                //new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddMinutes(JwtSettings.ExpiryMinutes)).ToUnixTimeSeconds().ToString()),
                 new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
                 new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddMinutes(60)).ToUnixTimeSeconds().ToString()),
             };

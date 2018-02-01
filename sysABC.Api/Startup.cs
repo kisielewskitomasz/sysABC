@@ -32,8 +32,6 @@ namespace sysABC.Api
             services.AddScoped<IUserService, UserService>();
             services.AddSingleton<IEncrypter, Encrypter>();
             services.AddMvc();
-            //JwtSettings jwtSettings = Configuration.GetSection("Jwt").Get<JwtSettings>();
-            //services.AddSingleton(jwtSettings);
             services.AddAuthorization(x => x.AddPolicy("admin", p => p.RequireRole("admin")));
             services.AddAuthentication(options =>
             {
