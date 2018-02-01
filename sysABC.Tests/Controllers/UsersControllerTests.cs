@@ -23,8 +23,7 @@ namespace sysABC.Tests.Controllers
         public UsersControllerTests()
         {
             _server = new TestServer(new WebHostBuilder()
-                                     .UseEnvironment("Development")
-                                     .UseStartup<Startup>());
+                          .UseStartup<Startup>());
             _client = _server.CreateClient();
         }
 

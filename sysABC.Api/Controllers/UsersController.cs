@@ -32,6 +32,7 @@ namespace sysABC.Api.Controllers
         }
 
         // GET api/users/email
+        [Authorize]
         [HttpGet("{email}")]
         public async Task<IActionResult> GetUserAsync(string email)
         {
@@ -44,7 +45,21 @@ namespace sysABC.Api.Controllers
             return (Json(user));
         }
 
+<<<<<<< HEAD
         [Authorize(Roles = "admin")]
+=======
+        //[Route("update/password")]
+        //[Authorize]
+        //[HttpPut]
+        //public async Task<IActionResult> PutUpdateUserAsync([FromBody]UpdateUserPassword request)
+        //{
+        //    await UserService.UpdateAsync(request.Email, request.Password);
+
+        //    return Ok();
+        //}
+
+        [Authorize]// admin
+>>>>>>> parent of 1e18bdc... JwtSettings
         [HttpDelete("{email}")]
         public async Task<IActionResult> DeleteUserAsync(string email)
         {
@@ -91,6 +106,7 @@ namespace sysABC.Api.Controllers
             return BadRequest();
         }
 
+<<<<<<< HEAD
         string GenerateToken(string mail, string role="user")
         {
             var claims = new Claim[]
@@ -99,11 +115,24 @@ namespace sysABC.Api.Controllers
                 new Claim(ClaimTypes.Role, role),
                 new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
                 new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddMinutes(60)).ToUnixTimeSeconds().ToString()),
+=======
+        string GenerateToken(string username)
+        {
+            var claims = new Claim[]
+            {
+                new Claim(ClaimTypes.Name, username),
+                new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
+                new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now).AddMinutes(60).ToUnixTimeSeconds().ToString()),
+>>>>>>> parent of 1e18bdc... JwtSettings
             };
 
             var token = new JwtSecurityToken(
                 new JwtHeader(new SigningCredentials(
+<<<<<<< HEAD
                     new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz")),
+=======
+                                  new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdefghijklmnoprstuwyz")),
+>>>>>>> parent of 1e18bdc... JwtSettings
                                              SecurityAlgorithms.HmacSha256)),
                 new JwtPayload(claims));
 
