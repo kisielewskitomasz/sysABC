@@ -82,7 +82,7 @@ namespace sysABC.Api.Controllers
 
         [Route("token/admin")] // this is test only method to generate admin token
         [HttpGet]
-        public async Task<IActionResult> GetReturnTokenAsAdminAsync()
+        public IActionResult GetReturnTokenAsAdmin()
         {
             return new ObjectResult(GenerateToken("don't matter", "admin"));
         }
