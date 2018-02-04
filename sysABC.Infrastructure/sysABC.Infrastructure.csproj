@@ -2,25 +2,50 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <RuntimeFrameworkVersion>2.0.0</RuntimeFrameworkVersion>
   </PropertyGroup>
 
+<ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
   <ItemGroup>
     <Folder Include="Repositories\" />
     <Folder Include="Services\" />
     <Folder Include="DTO\" />
     <Folder Include="Commands\" />
     <Folder Include="Commands\Users\" />
+    <Folder Include="SQL\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\sysABC.Core\sysABC.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.0.1" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.107" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="DTO\JwtDto.cs" />
     <Compile Remove="Services\IJwtHandler.cs" />
     <Compile Remove="Services\JwtHandler.cs" />
     <Compile Remove="Settings\JwtSettings.cs" />
+    <Compile Remove="SQL\SqlSettings.cs" />
+    <Compile Remove="Commands\Users\UpdateUserPassword.cs" />
+    <Compile Remove="Services\IDataInitializer.cs" />
+    <Compile Remove="Services\DataInitializer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="SQL\sysABCcontext.config" />
+    <None Remove="sqldiff" />
+    <None Remove="sqlite3" />
+    <None Remove="sqlite3_analyzer" />
+    <None Remove="SQL\sysABC.sql" />
   </ItemGroup>
 </Project>

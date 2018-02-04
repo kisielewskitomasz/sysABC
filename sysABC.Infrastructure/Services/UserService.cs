@@ -30,27 +30,25 @@ namespace sysABC.Infrastructure.Services
             await _userRepository.AddAsync(user);
         }
 
-        public async Task<bool> LoginAsync(string email, string password)
+        public async Task<UserDto> LoginAsync(string email, string password)
         {
             var user = await _userRepository.GetAsync(email);
             if (user == null)
                 throw new Exception("Invalid credentials");
 
             var hash = _encrypter.GetHash(password, user.Salt);
-            if (user.Password == hash)
-            {
-                return true;
-            }
-            throw new Exception("Invalid credentials");
+            if (user.Password != hash)
+                throw new Exception("Invalid credentials");
+
+            return new UserDto(user.Id, user.Email, user.NickName, user.FirstName, user.LastName, user.Role);
         }
 
         public async Task<UserDto> GetAsync(string email)
         {
             var user = await _userRepository.GetAsync(email);
-            if (user == null) 
-                return null;
-            //   throw new Exception($"User with '{email}' not exitst!");
-
+            if (user == null)
+                return null; // to unit test make working
+                //throw new Exception($"User with '{email}' not exitst!");
             return new UserDto(user.Id, user.Email, user.NickName, user.FirstName, user.LastName, user.Role);
         }
 
@@ -63,20 +61,42 @@ namespace sysABC.Infrastructure.Services
 
             if (usersDto.Count == 0)
                 return null;
-            
+
             return usersDto;
         }
 
-        public async Task<bool> DeleteAsync(string email)
+        public async Task DeleteAsync(string email)
         {
             var user = await _userRepository.GetAsync(email);
             if (user == null)
-                return false;
-            //   throw new Exception($"User with '{email}' not exitst!");
+                throw new Exception($"User with '{email}' not exitst!");
 
             await _userRepository.RemoveAsync(user.Id);
-
-            return true;
         }
+
+        public async Task UpdateAsync(string email, string role) //string password, string nickName, string firstName, string lastName, 
+        {
+            var user = await _userRepository.GetAsync(email);
+            if (user == null)
+                throw new Exception($"User with '{email}' not exitst!");
+
+            await _userRepository.UpdateAsync(user.Id, role);
+        }
+
+        //public async Task UpdateAsync(string email, string newEmail, string password, string nickName, string firstName, string lastName, string role)
+        //{
+        //    var user = await _userRepository.GetAsync(email);
+        //    if (user == null)
+        //        throw new Exception($"User with '{email}' not exitst!");
+
+        //    var salt = _encrypter.GetSalt();
+        //    var hash = _encrypter.GetHash(password, salt);
+        //    user.SetEmail(newEmail);
+        //    user.SetPassword(hash);
+        //    user.SetNickName(nickName);
+        //    user.SetFirstName(firstName);
+        //    user.SetLastName(lastName);
+        //    await _userRepository.UpdateAsync(user.Id, role);
+        //}
     }
 }

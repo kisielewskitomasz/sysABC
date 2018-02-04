@@ -13,6 +13,8 @@ using Microsoft.Extensions.Options;
 using sysABC.Core.Repositories;
 using sysABC.Infrastructure.Repositories;
 using sysABC.Infrastructure.Services;
+using sysABC.Infrastructure.SQL;
+using Microsoft.EntityFrameworkCore;
 
 namespace sysABC.Api
 {
@@ -20,18 +22,23 @@ namespace sysABC.Api
     {
         public IConfiguration Configuration { get; set; }
 
-        public Startup(IHostingEnvironment env, IConfiguration configuration)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IUserRepository, InMemoryUserRepository>();
+            //services.AddScoped<IUserRepository, InMemoryUserRepository>(); // without Sqlite DB
+            services.AddScoped<IUserRepository, DbUserRepository>(); // with Sqlite DB
             services.AddScoped<IUserService, UserService>();
             services.AddSingleton<IEncrypter, Encrypter>();
             services.AddMvc();
+
+            services.AddEntityFrameworkSqlite()
+            //services.AddEntityFrameworkInMemoryDatabase()
+                    .AddDbContext<SysABCContext>(options => options.UseSqlite("Data Source=sysabcsql.db"));//
+
             services.AddAuthorization(x => x.AddPolicy("admin", p => p.RequireRole("admin")));
             services.AddAuthentication(options =>
             {
@@ -43,19 +50,17 @@ namespace sysABC.Api
                 {
                     ValidateAudience = false,
                     ValidateIssuer = false,
-                    //ValidIssuer = jwtSettings.Issuer,
 
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz")),
 
-                    ValidateLifetime = true, //validate the expiration and not before values in the token
+                    ValidateLifetime = true,
 
-                    ClockSkew = TimeSpan.FromMinutes(5) //5 minute tolerance for the expiration date
+                    ClockSkew = TimeSpan.FromMinutes(5)
                 };
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())

@@ -17,7 +17,9 @@ namespace sysABC.Core.Models
         public DateTime CreatedAt { get; protected set; }
         public DateTime UpdatedAt { get; protected set; }
 
-        //static readonly Regex NickNameRegex = new Regex("^(?![_.-])(?!.*[_.-]{2})[a-zA-Z0-9._.-]+(?<![_.-])$");
+        static readonly Regex NickNameRegex = new Regex("^(?![_.-])(?!.*[_.-]{2})[a-zA-Z0-9._.-]+(?<![_.-])$");
+        static readonly Regex FirstNameRegex = new Regex("^(?![_.-])(?!.*[_.-]{2})[a-zA-Z. ]+(?<![_.-])$");
+        static readonly Regex LastNameRegex = new Regex("^(?![_.-])(?!.*[_.-]{2})[a-zA-Z. .-]+(?<![_.-])$");
 
         protected User()
         {
@@ -25,7 +27,6 @@ namespace sysABC.Core.Models
 
         public User(string email, string password, string salt, string nickName, string firstName, string lastName, string role = "user")
         {
-            //#todo: validation
             Id = Guid.NewGuid();
             Email = email.ToLowerInvariant();
             Password = password;
@@ -35,71 +36,92 @@ namespace sysABC.Core.Models
             LastName = lastName;
             Role = role;
             CreatedAt = DateTime.UtcNow;
+            UpdatedAt = DateTime.UtcNow;
         }
 
-        //public void SetNickName(string nickName)
-        //{
-        //    if (string.IsNullOrWhiteSpace(nickName))
-        //        throw new Exception("Nickname can not be empty.");
+        public void SetEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                throw new Exception("Email can not be empty.");
 
-        //    if (!NickNameRegex.IsMatch(nickName))
-        //        throw new Exception("Nickname is invalid.");
+            if (!IsValidEmail(email))
+                throw new Exception("Email is invalid.");
 
+            if (Email == email)
+                return;
 
-        //    NickName = nickName;
-        //    UpdatedAt = DateTime.UtcNow;
-        //}
+            Email = email.ToLowerInvariant();
+            UpdatedAt = DateTime.UtcNow;
+        }
 
-        //public void SetEmail(string email)
-        //{
-        //    if (string.IsNullOrWhiteSpace(email))
-        //        throw new Exception("Email can not be empty.");
+        bool IsValidEmail(string email)
+        {
+            try
+            {
+                MailAddress m = new MailAddress(email);
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+        }
 
-        //    if (!IsValidEmail(email))
-        //        throw new Exception("Email is invalid.");
+        public void SetPassword(string password)
+        {
+            if (string.IsNullOrWhiteSpace(password))
+                throw new Exception("Password can not be empty.");
 
-        //    if (Email == email)
-        //        return;
+            if (Password == password)
+                return;
 
-        //    Email = email.ToLowerInvariant();
-        //    UpdatedAt = DateTime.UtcNow;
-        //}
+            Password = password;
+            UpdatedAt = DateTime.UtcNow;
+        }
 
-        //bool IsValidEmail(string email)
-        //{
-        //    try
-        //    {
-        //        MailAddress m = new MailAddress(email);
-        //        return true;
-        //    }
-        //    catch (FormatException)
-        //    {
-        //        return false;
-        //    }
-        //}
+        public void SetNickName(string nickName)
+        {
+            if (string.IsNullOrWhiteSpace(nickName))
+                throw new Exception("Nickname can not be empty.");
 
-        //public void SetPassword(string password)
-        //{
-        //    if (string.IsNullOrWhiteSpace(password))
-        //        throw new Exception("Password can not be empty.");
+            if (!NickNameRegex.IsMatch(nickName))
+                throw new Exception("Nickname is invalid.");
+            
+            NickName = nickName;
+            UpdatedAt = DateTime.UtcNow;
+        }
 
-        //    if (password.Length < 3)
-        //        throw new Exception("Password must contain at least 3 characters.");
+        public void SetFirstName(string firstName)
+        {
+            if (string.IsNullOrWhiteSpace(firstName))
+                throw new Exception("Nickname can not be empty.");
 
-        //    if (Password == password)
-        //        return;
+            if (!FirstNameRegex.IsMatch(firstName))
+                throw new Exception("Nickname is invalid.");
 
-        //    Password = password;
-        //    UpdatedAt = DateTime.UtcNow;
-        //}
+            FirstName = firstName;
+            UpdatedAt = DateTime.UtcNow;
+        }
 
-        //public void SetRole(string role)
-        //{
-        //    if (Role == role)
-        //        return;
+        public void SetLastName(string lastName)
+        {
+            if (string.IsNullOrWhiteSpace(lastName))
+                throw new Exception("Nickname can not be empty.");
 
-        //    Role = role;
-        //    UpdatedAt = DateTime.UtcNow;
-        //}
+            if (!LastNameRegex.IsMatch(lastName))
+                throw new Exception("Nickname is invalid.");
+            
+            LastName = lastName;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void SetRole(string role)
+        {
+            if (Role == role)
+                return;
+
+            Role = role;
+            UpdatedAt = DateTime.UtcNow;
+        }
     }
 }

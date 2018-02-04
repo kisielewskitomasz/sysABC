@@ -12,13 +12,13 @@ namespace sysABC.Infrastructure.Repositories
         static ISet<User> _users = new HashSet<User>();
 
         public async Task<User> GetAsync(Guid id)
-            => await Task.FromResult(_users.SingleOrDefault(x => x.Id == id));
+        => await Task.FromResult(_users.SingleOrDefault(x => x.Id == id));
 
         public async Task<User> GetAsync(string email)
-            => await Task.FromResult(_users.SingleOrDefault(x => x.Email == email.ToLowerInvariant()));
+        => await Task.FromResult(_users.SingleOrDefault(x => x.Email == email.ToLowerInvariant()));
 
         public async Task<IEnumerable<User>> BrowseAsync()
-            => await Task.FromResult(_users);
+        => await Task.FromResult(_users);
 
         public async Task AddAsync(User user)
         {
@@ -28,9 +28,15 @@ namespace sysABC.Infrastructure.Repositories
 
         public async Task RemoveAsync(Guid id)
         {
-            User user = await GetAsync(id);
-            //#todo: null checking
+            var user = await GetAsync(id);
             _users.Remove(user);
+            await Task.CompletedTask;
+        }
+
+        public async Task UpdateAsync(Guid id, string role)
+        {
+            var user = await GetAsync(id);
+            user.SetRole(role);
             await Task.CompletedTask;
         }
     }

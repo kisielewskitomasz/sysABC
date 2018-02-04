@@ -8,9 +8,10 @@ namespace sysABC.Infrastructure.Services
     public interface IUserService
     {
         Task RegisterAsync(string email, string password, string nickName, string firstName, string lastName);
-        Task<bool> LoginAsync(string email, string password);
+        Task<UserDto> LoginAsync(string email, string password);
         Task<UserDto> GetAsync(string email);
         Task<IEnumerable<UserDto>> BrowseAsync();
-        Task<bool> DeleteAsync(string email);
+        Task DeleteAsync(string email);
+        Task UpdateAsync(string email, string role);
     }
 }

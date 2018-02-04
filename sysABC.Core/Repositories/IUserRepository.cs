@@ -12,5 +12,6 @@ namespace sysABC.Core.Repositories
         Task<IEnumerable<User>> BrowseAsync();
         Task AddAsync(User user);
         Task RemoveAsync(Guid id);
+        Task UpdateAsync(Guid id, string role);
     }
 }

@@ -29,4 +29,7 @@
   <ItemGroup>
     <Content Remove="appsettings.json" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\netcoreapp2.0\sysabcsql.db" />
+  </ItemGroup>
 </Project>
