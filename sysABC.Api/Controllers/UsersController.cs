@@ -91,10 +91,17 @@ namespace sysABC.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> PostReturnTokenAsUserAsync([FromBody]LoginUser request)
         {
-            var user = await UserService.LoginAsync(request.Email, request.Password);
-            if (user != null)
-                return new ObjectResult(GenerateToken(user.Email, user.Role));
-            return BadRequest();
+            try
+            {
+                var user = await UserService.LoginAsync(request.Email, request.Password);
+                if (user != null)
+                    return new ObjectResult(GenerateToken(user.Email, user.Role));
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
 
         string GenerateToken(string mail, string role = "user")
