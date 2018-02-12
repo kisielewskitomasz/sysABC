@@ -94,13 +94,11 @@ namespace sysABC.Api.Controllers
             try
             {
                 var user = await UserService.LoginAsync(request.Email, request.Password);
-                if (user != null)
-                    return new ObjectResult(GenerateToken(user.Email, user.Role));
-                return BadRequest();
+                return new ObjectResult(GenerateToken(user.Email, user.Role));
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return Unauthorized();
             }
         }
 
